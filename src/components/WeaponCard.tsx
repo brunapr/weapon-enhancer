@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { WeaponEvent, defaultWeaponDurability, useWeaponStore } from "../stores/weapon.store";
+import { WeaponEvent, useWeaponStore } from "../stores/weapon.store";
 
 const EnhanceEvent = ({ outcome }: { outcome: WeaponEvent }) => {
   const bgColors: Record<WeaponEvent, string> = {
