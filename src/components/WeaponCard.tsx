@@ -42,7 +42,7 @@ export default function WeaponCard() {
   }, [weapon?.level])
 
   useEffect(() => {
-    if (weapon && weapon.durability == 0) triggerEvent("failure")
+    if (weapon && weapon.durability < 0) triggerEvent("failure")
   }, [weapon?.durability])
 
   if (!weapon) return null
