@@ -64,9 +64,9 @@ export default function WeaponCommands() {
     }
 
     triggerEvent("success")
-    const rate = successlevel(weapon.level)
-    const number = totalLuck * (rate / 100)
-    setTotalLuck(parseFloat(number.toFixed(5)))
+    const rate = successlevel(weapon.level) / 100;
+    const luck = (totalLuck * rate).toFixed(4);
+    setTotalLuck(parseFloat(luck));
 
     let newWeapon: Partial<Weapon> = {
       level: weapon.level + 1,
@@ -95,11 +95,11 @@ export default function WeaponCommands() {
       <div className="w-[300px] md:w-[220px] p-4 size-fit bg-orange-200 pixelify flex flex-col justify-center items-center">
         <div className="w-full flex justify-between items-center">
           <span>Total luck</span>
-          <span>{totalLuck * 100}%</span>
+          <span>{(totalLuck * 100).toPrecision(4)}%</span>
         </div>
         <div className="w-full flex justify-between items-center mt-2">
           <span>Next enhance</span>
-          <span>{successlevel(weapon ? weapon.level + 1 : 100)}%</span>
+          <span>{successlevel(weapon ? weapon.level + 1 : 100).toPrecision(4)}%</span>
         </div>
         <div className="flex w-full justify-between mt-10">
           <button
