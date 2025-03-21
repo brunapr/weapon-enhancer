@@ -74,7 +74,7 @@ export default function WeaponCard() {
       <h4 className="text-slate-500 w-full">{weapon.type}</h4>
       <img
         src={"/baelle.webp"}
-        alt="Spearpoint of Baelle"
+        alt={weapon.name}
         className="w-40 h-auto"
       />
       <StatItem title="Base Attack" value={weapon.baseAttack} className="text-black my-4 font-bold" />
