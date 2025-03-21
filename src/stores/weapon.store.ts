@@ -22,6 +22,8 @@ interface WeaponState {
   reset: () => void
 }
 
+export const defaultWeaponDurability = 4
+
 const defaultWeapon = {
   level: 0,
   name: "Spearpoint of Baelle",
@@ -29,7 +31,7 @@ const defaultWeapon = {
   baseAttack: 901,
   magicAttack: -90,
   dex: 43,
-  durability: 4,
+  durability: defaultWeaponDurability,
   passive: "",
 }
 

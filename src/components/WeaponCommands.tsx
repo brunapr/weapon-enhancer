@@ -2,25 +2,14 @@ import { Weapon, useWeaponStore } from "../stores/weapon.store";
 import { Stats, controls, elementals, getRandomStats, passives, successlevel, tryEnhance } from "../config/weapon";
 import { useEffect, useState } from "react";
 
-const EventText = ({ event }: { event: "success" | "failure" | undefined }) => {
-  return (
-    <span className={`${event === "success" ? "text-green-800" : "text-red-800"} pixelify w-full text-center text-2xl slide-in`}>
-      {event === "success" ? "Success!" : "Failure!"}
-    </span>
-  );
-}
-
 export default function WeaponCommands() {
   const { setWeapon, weapon, reset } = useWeaponStore()
   const [totalLuck, setTotalLuck] = useState(1)
-  const [event, setEvent] = useState<"success" | "failure" | undefined>()
   const [disabled, setDisabled] = useState(false)
 
-  const triggerEvent = (type: "success" | "failure") => {
+  const triggerEvent = () => {
     setDisabled(true)
-    setEvent(type);
     setTimeout(() => {
-      setEvent(undefined)
       setDisabled(false)
     }, 1000);
   };
@@ -59,11 +48,11 @@ export default function WeaponCommands() {
     if (!isSuccess) {
       const newDurability = weapon.durability - 1
       setWeapon({ ...weapon, durability: newDurability })
-      triggerEvent("failure")
+      triggerEvent()
       return
     }
 
-    triggerEvent("success")
+    triggerEvent()
     const rate = successlevel(weapon.level) / 100;
     const luck = (totalLuck * rate).toFixed(4);
     setTotalLuck(parseFloat(luck));
@@ -116,11 +105,6 @@ export default function WeaponCommands() {
           </button>
         </div>
       </div>
-      {
-        event &&
-        <EventText event={event} />
-      }
-      <span></span>
     </div>
   );
 }
