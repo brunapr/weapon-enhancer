@@ -71,7 +71,7 @@ export default function WeaponCard() {
           <h1 className="text-fuchsia-950 text-xl">+{weapon.level}</h1>
         }
       </div>
-      <h4 className="text-slate-500 w-full">{weapon.type}</h4>
+      <h4 className="text-black w-full">{weapon.type}</h4>
       <img
         src="./baelle.webp"
         alt={weapon.name}
