@@ -92,7 +92,7 @@ export default function WeaponCommands() {
 
   return (
     <div className="flex flex-col space-y-10 w-fit items-center">
-      <div className="w-[220px] p-4 size-fit bg-orange-200 pixelify flex flex-col justify-center items-center">
+      <div className="w-[300px] md:w-[220px] p-4 size-fit bg-orange-200 pixelify flex flex-col justify-center items-center">
         <div className="w-full flex justify-between items-center">
           <span>Total luck</span>
           <span>{totalLuck * 100}%</span>

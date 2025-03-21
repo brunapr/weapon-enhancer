@@ -1,5 +1,6 @@
 {
-  "name": "my-app",
+  "name": "weapon-enhancer",
+  "homepage": "https://brunapr.github.io/weapon-enhancer/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
