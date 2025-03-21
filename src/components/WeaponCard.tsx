@@ -73,7 +73,7 @@ export default function WeaponCard() {
       </div>
       <h4 className="text-slate-500 w-full">{weapon.type}</h4>
       <img
-        src={"/baelle.webp"}
+        src="./baelle.webp"
         alt={weapon.name}
         className="w-40 h-auto"
       />
