@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { Stats } from '../config/weapon'
 
+export type WeaponEvent = "failure" | "success" | "break" | ""
+
 export interface Weapon {
   level: number
   name: string
@@ -18,6 +20,8 @@ export interface Weapon {
 interface WeaponState {
   weapon: Weapon | undefined
   setWeapon: (weapon: Weapon | undefined) => void
+  event: WeaponEvent
+  dispatchEvent: (event: WeaponEvent) => void
   getStorageWeapon: () => Weapon
   reset: () => void
 }
@@ -37,9 +41,16 @@ const defaultWeapon = {
 
 export const useWeaponStore = create<WeaponState>()((set) => ({
   weapon: undefined,
+  event: "",
   setWeapon: (weapon) => {
     set({ weapon })
     localStorage.setItem("weapon", JSON.stringify(weapon))
+  },
+  dispatchEvent: (event: WeaponEvent) => {
+    set({ event })
+    setTimeout(() => {
+      set({ event: "" })
+    }, 1000)
   },
   getStorageWeapon: () => {
     const weapon = localStorage.getItem("weapon")

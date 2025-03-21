@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import { defaultWeaponDurability, useWeaponStore } from "../stores/weapon.store";
+import { WeaponEvent, defaultWeaponDurability, useWeaponStore } from "../stores/weapon.store";
 
-type Event = "failure" | "success" | "break"
-
-const EnhanceEvent = ({ outcome }: { outcome: Event }) => {
-  const bgColors: Record<Event, string> & { default: string } = {
+const EnhanceEvent = ({ outcome }: { outcome: WeaponEvent }) => {
+  const bgColors: Record<WeaponEvent, string> = {
     success: "bg-fuchsia-600",
     failure: "bg-slate-600",
     break: "bg-red-600",
-    default: "bg-black"
+    "": "bg-black"
   };
 
-  const bgColor = bgColors[outcome] ?? bgColors.default;
+  const bgColor = bgColors[outcome] ?? bgColors[""];
 
   return (
     <div className="z-10 absolute top-0 left-0 w-full h-full">
@@ -21,17 +19,16 @@ const EnhanceEvent = ({ outcome }: { outcome: Event }) => {
   )
 }
 
-const EventText = ({ outcome }: { outcome: Event }) => {
-  console.log(outcome)
+const EventText = ({ outcome }: { outcome: WeaponEvent }) => {
   type TextOutcome = { color: string, text: string }
-  const outcomes: Record<Event, TextOutcome> & { default: TextOutcome } = {
+  const outcomes: Record<WeaponEvent, TextOutcome> = {
     success: { color: "text-green-800", text: "Success!" },
     failure: { color: "text-red-800", text: "Failure!" },
     break: { color: "text-slate-600", text: "Break!" },
-    default: { color: "text-black", text: "" },
+    "": { color: "text-black", text: "" },
   };
 
-  const { color, text } = outcomes[outcome] ?? outcomes.default;
+  const { color, text } = outcomes[outcome] ?? outcomes[""];
 
   return (
     <span className={`${color} absolute left-0 top-[-40px] pixelify w-full text-center text-2xl slide-in`}>
@@ -65,32 +62,14 @@ function StatItem({
 }
 
 export default function WeaponCard() {
-  const { weapon, reset } = useWeaponStore()
-  const [event, setEvent] = useState<Event | undefined>()
-
-  useEffect(() => {
-    if (weapon && weapon.level > 0) triggerEvent("success")
-  }, [weapon?.level])
-
-  useEffect(() => {
-    const checkDurability = weapon && weapon.durability < defaultWeaponDurability
-    if (checkDurability) triggerEvent(weapon.durability < 0 ? "break" : "failure")
-  }, [weapon?.durability])
+  const { weapon, event } = useWeaponStore()
 
   if (!weapon) return null
-
-  const triggerEvent = (type: "success" | "failure" | "break") => {
-    setEvent(type);
-    if (type === "break") reset()
-    setTimeout(() => {
-      setEvent(undefined)
-    }, 1000);
-  };
 
   return (
     <div className="relative w-[300px] p-4 size-fit bg-orange-200 pixelify flex flex-col justify-center items-center">
       {
-        event &&
+        event.length > 0 &&
         <EnhanceEvent outcome={event ?? "success"} />
       }
       <div className="flex justify-between w-full">

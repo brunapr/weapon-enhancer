@@ -3,18 +3,10 @@ import { Stats, controls, elementals, getRandomStats, passives, successlevel, tr
 import { useEffect, useState } from "react";
 
 export default function WeaponCommands() {
-  const { setWeapon, weapon, reset } = useWeaponStore()
+  const { setWeapon, weapon, reset, event, dispatchEvent } = useWeaponStore()
   const [totalLuck, setTotalLuck] = useState(1)
-  const [disabled, setDisabled] = useState(false)
 
-  const triggerEvent = () => {
-    setDisabled(true)
-    setTimeout(() => {
-      setDisabled(false)
-    }, 1000);
-  };
-
-  function setStats(newWeapon: Partial<Weapon>) {
+  function handleStats(newWeapon: Partial<Weapon>) {
     if (!weapon) return
     if (!newWeapon.attributes) newWeapon.attributes = {};
 
@@ -40,22 +32,33 @@ export default function WeaponCommands() {
     }
   }
 
+  function handleDurability(weapon: Weapon) {
+    const newDurability = weapon.durability - 1
+    setWeapon({ ...weapon, durability: newDurability })
+
+    if (newDurability >= 0) {
+      dispatchEvent("failure")
+      return
+    }
+
+    dispatchEvent("break")
+    reset()
+  }
+
   function enhanceWeapon() {
     if (!weapon) return null
 
     const isSuccess = tryEnhance(weapon.level)
 
     if (!isSuccess) {
-      const newDurability = weapon.durability - 1
-      setWeapon({ ...weapon, durability: newDurability })
-      triggerEvent()
+      handleDurability(weapon)
       return
     }
 
-    triggerEvent()
+    dispatchEvent("success")
     const rate = successlevel(weapon.level) / 100;
-    const luck = (totalLuck * rate).toFixed(4);
-    setTotalLuck(parseFloat(luck));
+    const luck = totalLuck * rate
+    setTotalLuck(luck);
 
     let newWeapon: Partial<Weapon> = {
       level: weapon.level + 1,
@@ -65,7 +68,7 @@ export default function WeaponCommands() {
       attributes: weapon.attributes
     }
 
-    setStats(newWeapon)
+    handleStats(newWeapon)
 
     if (weapon.level == 15) {
       const newPassive = getRandomStats(passives) as string
@@ -93,14 +96,12 @@ export default function WeaponCommands() {
         <div className="flex w-full justify-between mt-10">
           <button
             onClick={() => reset()}
-            disabled={disabled}
-            className={`${disabled ? "!pointer-events-none !bg-[#cea487]" : ""} transition py-2 px-3 bg-red-300 hover:bg-red-300/50 cursor-pointer`}>
+            className={`${event.length > 0 ? "!pointer-events-none !bg-[#cea487]" : ""} transition py-2 px-3 bg-red-300 hover:bg-red-300/50 cursor-pointer`}>
             Reset
           </button>
           <button
             onClick={() => enhanceWeapon()}
-            disabled={disabled}
-            className={`${disabled ? "!pointer-events-none !bg-[#cea487]" : ""} transition py-2 px-3 bg-orange-300 hover:bg-orange-300/50 cursor-pointer`}
+            className={`${event.length > 0 ? "!pointer-events-none !bg-[#cea487]" : ""} transition py-2 px-3 bg-orange-300 hover:bg-orange-300/50 cursor-pointer`}
           >Enhance
           </button>
         </div>
